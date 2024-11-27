@@ -1,0 +1,7 @@
+2024-11-27 10:45:38.094 +01:00 [INF] Request: GET /
+2024-11-27 10:45:51.837 +01:00 [INF] Request: GET /
+2024-11-27 10:46:35.433 +01:00 [INF] Request: GET /api/v1/controller/GetWeatherForecast
+2024-11-27 10:47:57.735 +01:00 [INF] Request: GET /
+2024-11-27 10:49:49.062 +01:00 [INF] Request: GET /api/v1.0/weather
+2024-11-27 10:50:24.107 +01:00 [INF] Request: GET /api/v1.0/weather-forecast
+2024-11-27 10:51:01.340 +01:00 [INF] Request: GET /api/v1.0/WeatherForecast
