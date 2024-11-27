@@ -1,1 +1,126 @@
-NestlyService/Logs/log-20241127.txt
+# General ignores for all environments
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Ignore files for .NET 8 API
+## User-specific files
+*.user
+*.userosscache
+*.sln.docstates
+
+## Build results
+bin/
+obj/
+debug/
+release/
+
+## Visual Studio specific
+.vs/
+.vscode/
+
+## Logs and temporary files
+*.log
+*.tlog
+*.ide#
+*.ilk
+*.ipch
+*.obj
+*.pch
+*.pyc
+*.rsp
+*.sbr
+*.unsuccessfulbuild
+*.log
+*.diff
+*.patch
+*.netrddoc
+*.sln.docstates
+*.cache/
+*.generate.bak
+*.generate.done
+
+## Configuration files
+appsettings.*.json
+!appsettings.json # Include the default appsettings.json
+
+## Package files
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Other .NET files
+*.dbmdl
+*.bak
+*.sql
+
+## JetBrains Rider specific
+.idea/
+.idea_modules/
+
+## IIS Express
+/.vs/
+
+# Ignore files for Flutter UI
+## Dart
+*.dart_tool/
+*.packages
+.packages
+.dart_tool/
+.dart_tool/
+
+## Flutter-specific
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+*.flutter-plugins
+*.flutter-plugins-dependencies
+flutter_export_environment.sh
+
+## iOS
+# Generated files
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+
+## Android
+android/.cxx/
+android/local.properties
+android/gradle.properties
+
+## Build results
+build/
+*.apk
+*.aab
+
+## Xcode
+*.xcuserdata
+*.xcworkspace
+DerivedData/
+
+## Web
+/web/.dart_tool/
+
+## IDE specific
+.idea/
+android/.gradle/
+*.iml
+
+## Miscellaneous
+.env
+*.keystore
+*.key
+
+# Node-related files (if Flutter web uses Node.js for deployment)
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnpm-debug.log
+.eslintcache
+.next/
+out/
+dist/
