@@ -1,0 +1,41 @@
+Inteligentny Planer Domowy – Rozwinięcie Pomysłu
+Główne Funkcje Aplikacji
+Zarządzanie Zadaniami Domowymi:
+
+Tworzenie harmonogramów sprzątania, napraw, pielęgnacji roślin i innych prac domowych.
+Możliwość przypisywania zadań do konkretnych osób w gospodarstwie domowym.
+Powiadomienia o zbliżających się terminach (np. „Czas na wyrzucenie śmieci”).
+Lista Zakupów:
+
+Wspólna lista zakupów synchronizowana między domownikami.
+Skanowanie kodów kreskowych produktów, by szybko dodawać je do listy.
+Sugerowanie brakujących produktów na podstawie historii zakupów.
+Przypomnienia o Rachunkach i Opłatach:
+
+Dodawanie cyklicznych opłat (prąd, woda, internet, czynsz).
+Automatyczne generowanie powiadomień o zbliżającym się terminie płatności.
+Możliwość zapisywania kwot i dat płatności, by śledzić historię.
+Zarządzanie Urządzeniami Domowymi:
+
+Baza sprzętów w domu z informacjami o gwarancji, przeglądach i ubezpieczeniach.
+Przypomnienia o konieczności serwisowania (np. czyszczenie klimatyzatora, przegląd pieca).
+Dokumentacja zdjęciowa i instrukcje obsługi przechowywane w aplikacji.
+Moduł Organizacyjny (Rodzinny Kalendarz):
+
+Kalendarz rodzinny zsynchronizowany między członkami domu.
+Widok tygodniowy/miesięczny z przypisaniem zadań do osób.
+Integracja z Google Calendar/Outlook.
+Finanse Domowe:
+
+Śledzenie wydatków gospodarstwa domowego.
+Automatyczna analiza kosztów (np. ile wydano na jedzenie, rachunki, rozrywkę).
+Sugerowanie oszczędności (np. zmiana dostawcy energii).
+Integracja z Urządzeniami IoT (opcjonalnie):
+
+Możliwość podłączenia urządzeń smart home, np. inteligentnych odkurzaczy, termostatów, czy czujników wilgoci.
+Automatyczne tworzenie zadań na podstawie danych z urządzeń (np. „Opróżnij odkurzacz”).
+
+TODO:
+-połączenie z bazą danych
+-przygotowanie pod przyszły system subskrybcji
+-użytkownik - logowanie, google signin, cors/jwt ui-api

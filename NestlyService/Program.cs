@@ -1,5 +1,6 @@
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,11 +40,30 @@ builder.Services.AddCors(options =>
     });
 });
 
+//Database
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var databaseProvider = builder.Configuration["DatabaseProvider"];
+
+if (databaseProvider == "SQLite")
+{
+    builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlite(connectionString));
+}
+else if (databaseProvider == "SqlServer")
+{
+    builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(connectionString));
+}
+else
+{
+    throw new InvalidOperationException("Unsupported database provider specified in configuration.");
+}
+
 //Rate Limiting
 builder.Services.AddMemoryCache();
 builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
 builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+
 
 var app = builder.Build();
 
