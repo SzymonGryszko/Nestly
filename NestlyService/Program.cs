@@ -46,11 +46,11 @@ var databaseProvider = builder.Configuration["DatabaseProvider"];
 
 if (databaseProvider == "SQLite")
 {
-    builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlite(connectionString));
+    builder.Services.AddDbContext<NestlyDbContext>(options => options.UseSqlite(connectionString));
 }
 else if (databaseProvider == "SqlServer")
 {
-    builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(connectionString));
+    builder.Services.AddDbContext<NestlyDbContext>(options => options.UseSqlServer(connectionString));
 }
 else
 {
