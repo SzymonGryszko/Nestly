@@ -124,3 +124,10 @@ yarn-error.log
 .next/
 out/
 dist/
+
+
+#Firebase
+firebase-admin-key.json
+
+#Logs
+NestlyService/Logs/*

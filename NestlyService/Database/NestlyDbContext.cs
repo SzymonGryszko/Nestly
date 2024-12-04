@@ -6,6 +6,6 @@ public class NestlyDbContext : DbContext
     {
     }
 
-    //DbSets for your entities
+    public DbSet<User> Users { get; set; }
 
 }

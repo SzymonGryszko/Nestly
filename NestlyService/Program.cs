@@ -1,4 +1,6 @@
 using AspNetCoreRateLimit;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -11,6 +13,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//Firebase
+FirebaseApp.Create(new AppOptions()
+{
+    Credential = GoogleCredential.FromFile("firebase-admin-key.json")
+});
 
 //Versioning
 builder.Services.AddApiVersioning(options =>
@@ -89,6 +97,8 @@ app.MapControllers();
 app.MapHealthChecks("/health");
 
 app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseMiddleware<FirebaseAuthenticationMiddleware>();
 
 app.UseCors("AllowAll");
 
