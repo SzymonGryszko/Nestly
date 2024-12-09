@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:nestly_ui/dependency_injection/locator.dart';
 import 'package:nestly_ui/state/auth_provider.dart' as provider;
 import 'package:nestly_ui/state/auth_wrapper.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  setup();
+
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp();
@@ -14,7 +17,7 @@ void main() async {
 
   runApp(
     ChangeNotifierProvider(
-      create: (_) => provider.AuthProvider()..checkAuthState(),
+      create: (_) => provider.AuthProvider()..initialize(),
       child: const MyApp(),
     ),
   );

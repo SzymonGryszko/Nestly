@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      body: Center(child: Text('Welcome!')),
+      body: const Center(child: Text('Welcome!')),
     );
   }
 }

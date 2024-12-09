@@ -1,105 +1,54 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutterfire_ui/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get_it/get_it.dart';
+import 'package:nestly_ui/api/api_client.dart';
 
-class LoginScreen extends StatefulWidget {
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _loginWithEmailPassword(),
-              child: const Text('Login'),
-            ),
-            ElevatedButton(
-              onPressed: () => _registerWithEmailPassword(),
-              child: const Text('Register'),
-            ),
-            ElevatedButton(
-              onPressed: () => _loginWithGoogle(),
-              child: const Text('Login with Google'),
-            ),
-            TextButton(
-              onPressed: () => _resetPassword(),
-              child: const Text('Forgot Password?'),
-            ),
-          ],
+    return SignInScreen(
+      providerConfigs: [
+        EmailProviderConfiguration(),
+        GoogleProviderConfiguration(
+          clientId: DefaultFirebaseOptions.currentPlatform.googleClientId,
         ),
-      ),
+      ],
+      actions: [
+        AuthStateChangeAction((context, _) async {
+          final user = FirebaseAuth.instance.currentUser;
+
+          if (user != null) {
+            // Get the Firebase ID token
+            final idToken = await user.getIdToken();
+
+            // Send the token to your backend for validation and user creation
+            final response = await _authenticateWithBackend(idToken!);
+
+            if (response.statusCode == 200) {
+              Navigator.pushReplacementNamed(context, '/home');
+            } else {
+              // Handle backend error (e.g., invalid token)
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Authentication Failed'),
+                  content: Text('Unable to validate user.'),
+                ),
+              );
+            }
+          }
+        }),
+      ],
     );
   }
 
-  Future<void> _loginWithEmailPassword() async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: _emailController.text, password: _passwordController.text);
-      print('User logged in: ${userCredential.user?.uid}');
-    } catch (e) {
-      print('Login failed: $e');
-    }
-  }
-
-  Future<void> _registerWithEmailPassword() async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: _emailController.text, password: _passwordController.text);
-      print('User registered: ${userCredential.user?.uid}');
-    } catch (e) {
-      print('Registration failed: $e');
-    }
-  }
-
-  Future<void> _loginWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser!.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-      print('Google login success: ${userCredential.user?.uid}');
-    } catch (e) {
-      print('Google login failed: $e');
-    }
-  }
-
-  Future<void> _resetPassword() async {
-    try {
-      await FirebaseAuth.instance
-          .sendPasswordResetEmail(email: _emailController.text);
-      print('Password reset email sent');
-    } catch (e) {
-      print('Password reset failed: $e');
-    }
+  Future<Response> _authenticateWithBackend(String idToken) async {
+    final ApiClient _apiClient = GetIt.instance<ApiClient>();
+    final response = await _apiClient.post('auth/validate-token');
+    return response;
   }
 }

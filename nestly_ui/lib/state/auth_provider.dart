@@ -11,8 +11,8 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> checkAuthState() async {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+  void initialize() {
+    FirebaseAuth.instance.authStateChanges().listen((user) {
       setUser(user);
     });
   }

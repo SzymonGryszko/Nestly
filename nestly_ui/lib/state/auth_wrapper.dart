@@ -5,6 +5,8 @@ import 'package:nestly_ui/state/auth_provider.dart' as provider;
 import 'package:provider/provider.dart';
 
 class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<provider.AuthProvider>(context).user;
