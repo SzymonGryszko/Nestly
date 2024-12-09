@@ -1,54 +1,109 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:myapp/services/auth_service.dart';
 import 'package:get_it/get_it.dart';
-import 'package:nestly_ui/api/api_client.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:nestly_ui/services/auth_service.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final AuthService _authService = GetIt.I<AuthService>();
+
+  bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   Widget build(BuildContext context) {
-    return SignInScreen(
-      providerConfigs: [
-        EmailProviderConfiguration(),
-        GoogleProviderConfiguration(
-          clientId: DefaultFirebaseOptions.currentPlatform.googleClientId,
+    return Scaffold(
+      appBar: AppBar(title: Text('Login')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            if (_errorMessage != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child:
+                    Text(_errorMessage!, style: TextStyle(color: Colors.red)),
+              ),
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(labelText: 'Email'),
+            ),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: InputDecoration(labelText: 'Password'),
+            ),
+            SizedBox(height: 20),
+            _isLoading
+                ? CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: _loginWithEmailPassword,
+                    child: Text('Login with Email'),
+                  ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _loginWithGoogle,
+              child: Text('Login with Google'),
+            ),
+          ],
         ),
-      ],
-      actions: [
-        AuthStateChangeAction((context, _) async {
-          final user = FirebaseAuth.instance.currentUser;
-
-          if (user != null) {
-            // Get the Firebase ID token
-            final idToken = await user.getIdToken();
-
-            // Send the token to your backend for validation and user creation
-            final response = await _authenticateWithBackend(idToken!);
-
-            if (response.statusCode == 200) {
-              Navigator.pushReplacementNamed(context, '/home');
-            } else {
-              // Handle backend error (e.g., invalid token)
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text('Authentication Failed'),
-                  content: Text('Unable to validate user.'),
-                ),
-              );
-            }
-          }
-        }),
-      ],
+      ),
     );
   }
 
-  Future<Response> _authenticateWithBackend(String idToken) async {
-    final ApiClient _apiClient = GetIt.instance<ApiClient>();
-    final response = await _apiClient.post('auth/validate-token');
-    return response;
+  // Handle email/password login
+  Future<void> _loginWithEmailPassword() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    bool success =
+        await _authService.authenticateWithEmailPassword(email, password);
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (success) {
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      setState(() {
+        _errorMessage = 'Invalid email or password';
+      });
+    }
+  }
+
+  // Handle Google login
+  Future<void> _loginWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    bool success = await _authService.authenticateWithGoogle();
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (success) {
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      setState(() {
+        _errorMessage = 'Google sign-in failed';
+      });
+    }
   }
 }
