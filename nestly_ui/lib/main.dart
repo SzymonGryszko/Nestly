@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:nestly_ui/state/auth_provider.dart' as provider;
+import 'package:nestly_ui/state/auth_wrapper.dart';
 import 'package:provider/provider.dart';
-import 'user_provider.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    print("firebase auth faile ${e}");
+  }
+
   runApp(
     ChangeNotifierProvider(
-      create: (_) => AuthProvider()..checkAuthState(),
-      child: MyApp(),
+      create: (_) => provider.AuthProvider()..checkAuthState(),
+      child: const MyApp(),
     ),
   );
 }
@@ -24,6 +30,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
