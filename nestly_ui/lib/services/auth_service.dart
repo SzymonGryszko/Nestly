@@ -1,13 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:nestly_ui/api/api_client.dart';
+import 'package:nestly_ui/state/nestly_auth_provider.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth;
   final ApiClient _apiClient;
   final GoogleSignIn _googleSignIn;
+  final NestlyAuthProvider _nestlyAuthProvider;
 
-  AuthService(this._firebaseAuth, this._apiClient, this._googleSignIn);
+  AuthService(this._firebaseAuth, this._apiClient, this._googleSignIn,
+      this._nestlyAuthProvider);
 
   // Authenticate with email and password
   Future<bool> authenticateWithEmailPassword(
@@ -23,6 +26,7 @@ class AuthService {
       // Call your backend to validate and create the user if needed
       await authenticateWithBackend(userCredential.user!.uid);
 
+      _nestlyAuthProvider.setUser(userCredential.user);
       return true;
     } catch (e) {
       // Handle authentication failure
@@ -54,6 +58,7 @@ class AuthService {
 
       // Call your backend to validate and create the user if needed
       await authenticateWithBackend(userCredential.user!.uid);
+      _nestlyAuthProvider.setUser(userCredential.user);
 
       return true;
     } catch (e) {
@@ -86,5 +91,6 @@ class AuthService {
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
     await _googleSignIn.signOut();
+    _nestlyAuthProvider.setUser(null);
   }
 }
